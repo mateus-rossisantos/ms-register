@@ -43,20 +43,23 @@ public class EcService {
         EC ecToSave = mapper.map(ecDTO, EC.class);
         Address addressToSave = ecToSave.getAddress();
 
-        Optional<Address> optionalAddress = addressRepository.
-                findByStreetAndNumberAndCity(addressToSave.getStreet(), addressToSave.getNumber(), addressToSave.getCity());
-
-        if (optionalAddress.isEmpty()) {
-            Address address = addressRepository.save(addressToSave);
-            ecToSave.setAddress(address);
-        } else {
-            ecToSave.setAddress(optionalAddress.get());
-        }
+        ecToSave.setAddress(saveOrGetAddress(addressToSave));
 
         EC ec = ecRepository.save(ecToSave);
         log.info("Estabelecimento: " + ec.getCnpj() + " salvo");
 
         return new ResponseEntity<>(ec, HttpStatus.CREATED);
+    }
+
+    private Address saveOrGetAddress(Address addressToSave) {
+        Optional<Address> optionalAddress = addressRepository.
+                findByStreetAndNumberAndCity(addressToSave.getStreet(), addressToSave.getNumber(), addressToSave.getCity());
+
+        if (optionalAddress.isEmpty()) {
+            return addressRepository.save(addressToSave);
+        } else {
+            return optionalAddress.get();
+        }
     }
 
     public ResponseEntity<List<EC>> getAllEcs() {
@@ -74,5 +77,21 @@ public class EcService {
         }
 
         return ResponseEntity.ok(optionalEC.get());
+    }
+
+    public ResponseEntity<EC> update(Long id, EcDTO ecDTO) {
+        Optional<EC> optionalEC = ecRepository.findById(id);
+
+        if (optionalEC.isEmpty()) {
+            throw new ECNotFoundException("EC não encontrado");
+        }
+
+        EC ecToUpdate = mapper.map(ecDTO, EC.class);
+        ecToUpdate.setAddress(saveOrGetAddress(ecToUpdate.getAddress()));
+        ecToUpdate.setId(optionalEC.get().getId());
+
+        EC ecUpdated = ecRepository.save(ecToUpdate);
+
+        return ResponseEntity.ok(ecUpdated);
     }
 }

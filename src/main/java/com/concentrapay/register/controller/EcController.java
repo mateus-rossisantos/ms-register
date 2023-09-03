@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.List;
 
@@ -35,7 +34,7 @@ public class EcController {
     @ResponseStatus(HttpStatus.CREATED)
     ResponseEntity<EC> postEc(@RequestBody EcDTO ecDTO) {
         return ecService.create(ecDTO);
-    };
+    }
 
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Recupera todos ECs"),
@@ -48,7 +47,7 @@ public class EcController {
     ResponseEntity<List<EC>> getAllEcs() {
         //PAGINAR FUTURAMENTE
         return ecService.getAllEcs();
-    };
+    }
 
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Recupera UM ECs"),
@@ -60,6 +59,18 @@ public class EcController {
     @ResponseStatus(HttpStatus.OK)
     ResponseEntity<EC> getEc(@PathVariable Long id) {
         return ecService.getEc(id);
-    };
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Altera um EC"),
+            @ApiResponse(code = 403, message = "Você não tem permissão para acessar este recurso"),
+            @ApiResponse(code = 500, message = "Foi gerada uma exceção"),
+    })
+    @PutMapping("/{id}")
+    @Transactional
+    @ResponseStatus(HttpStatus.CREATED)
+    ResponseEntity<EC> update(@PathVariable Long id, @RequestBody EcDTO ecDTO) {
+        return ecService.update(id, ecDTO);
+    }
 
 }
