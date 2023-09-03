@@ -79,6 +79,10 @@ public class EcService {
         return ResponseEntity.ok(optionalEC.get());
     }
 
+    public Optional<EC> getEcByCnpj(String cnpj) {
+        return ecRepository.findByCnpj(cnpj);
+    }
+
     public ResponseEntity<EC> update(Long id, EcDTO ecDTO) {
         Optional<EC> optionalEC = ecRepository.findById(id);
 

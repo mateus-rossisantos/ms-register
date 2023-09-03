@@ -1,16 +1,21 @@
 package com.concentrapay.register.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.validator.constraints.br.CNPJ;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class EC {
+public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -18,15 +23,10 @@ public class EC {
     @NotNull
     private String name;
     @NotNull
-    private String cnpj;
+    private BigDecimal price;
     @NotNull
-    private boolean complex;
+    private String description;
+    @CNPJ
     @NotNull
-    private String pix;
-    @NotNull
-    private String pixType;
-    @ManyToOne
-    @JoinColumn(name = "address_id")
-    private Address address;
-    private String complexCNPJ;
+    private String cnpjEc;
 }
