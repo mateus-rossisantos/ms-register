@@ -1,0 +1,18 @@
+spring:
+  main:
+    banner-mode: "off"
+  config:
+    activate:
+      on-profile: des
+  http:
+    multipart:
+      max-file-size: -1
+      max-request-size: -1
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+server:
+  port: 8081
+
+
